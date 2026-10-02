@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import Funcionario from "../Model/Funcionario.js"
+import cliente from "../model/cliente.js"
 
 const segredo = process.env.JWT_SECRET || "M3uS3gr3d0"
 
@@ -31,7 +31,7 @@ export async function authOuCadastroInicial(req, res, next) {
     }
 
     try {
-        if (await Funcionario.count() === 0) {
+        if (await cliente.count() === 0) {
             return next()
         }
         return res.status(401).send({ message: "Token não informado" })

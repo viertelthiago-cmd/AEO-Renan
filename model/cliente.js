@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize"
-import database from "../Config/database.js"
+import database from "../config/database.js"
 
-const Funcionario = database.db.define("Funcionario", {
+const cliente = database.db.define("cliente", {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -17,4 +17,4 @@ const Funcionario = database.db.define("Funcionario", {
     }
 })
 
-export default Funcionario
+export default cliente

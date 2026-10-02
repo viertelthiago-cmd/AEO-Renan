@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
-import repositoryFuncionario from "../Repository/Funcionario.js"
+import repositoryCliente from "../repository/cliente.js"
+
 
 const segredo =  "M3uS3gr3d0"
 
@@ -8,9 +9,9 @@ if (!process.env.JWT_SECRET && process.env.NODE_ENV === "production") {
     throw new Error("JWT_SECRET deve ser configurado em produção")
 }
 
-class ServiceFuncionario {
+class ServiceCliente {
     async Buscar() {
-        return repositoryFuncionario.Find()
+        return repositoryCliente.Find()
     }
 
     async Detalhe(id) {
@@ -18,11 +19,11 @@ class ServiceFuncionario {
             throw new Error("Id não informado")
         }
 
-        const funcionario = await repositoryFuncionario.FindById(id)
-        if (!funcionario) {
+        const cliente = await repositoryCliente.FindById(id)
+        if (!cliente) {
             throw new Error(`Id ${id} não encontrado`)
         }
-        return funcionario
+        return cliente
     }
 
     async Criar(nome, senha) {
@@ -31,7 +32,7 @@ class ServiceFuncionario {
         }
 
         const senhaCriptografada = await bcrypt.hash(senha, 12)
-        return repositoryFuncionario.Create(nome, senhaCriptografada)
+        return repositoryCliente.Create(nome, senhaCriptografada)
     }
 
     async Alterar(id, nome, senha) {
@@ -45,14 +46,14 @@ class ServiceFuncionario {
         const dados = {}
         if (nome) dados.nome = nome
         if (senha) dados.senha = await bcrypt.hash(senha, 12)
-        return repositoryFuncionario.Update(id, dados)
+        return repositoryCliente.Update(id, dados)
     }
 
     async Deletar(id) {
         if (!id) {
             throw new Error("Id não informado")
         }
-        return repositoryFuncionario.Delete(id)
+        return repositoryCliente.Delete(id)
     }
 
     async Login(nome, senha) {
@@ -60,15 +61,15 @@ class ServiceFuncionario {
             throw new Error("Nome e senha são obrigatórios")
         }
 
-        const funcionario = await repositoryFuncionario.FindByNome(nome)
-        if (!funcionario || !await bcrypt.compare(senha, funcionario.senha)) {
+        const cliente = await repositoryCliente.FindByNome(nome)
+        if (!cliente || !await bcrypt.compare(senha, cliente.senha)) {
             throw new Error("Nome ou senha inválidos")
         }
 
-        return jwt.sign({ id: funcionario.id, nome: funcionario.nome }, segredo, {
+        return jwt.sign({ id: cliente.id, nome: cliente.nome }, segredo, {
             expiresIn: "1h"
         })
     }
 }
 
-export default new ServiceFuncionario()
+export default new ServiceCliente()
